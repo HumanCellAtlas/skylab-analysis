@@ -9,7 +9,7 @@ import requests
 client = storage.Client()
 bucket=client.get_bucket('broad-dsde-mint-dev-cromwell-execution')
 ## load cromwell credential
-logins=json.load(open('/usr/secrets/broad-dsde-mint-cromwell.json'))
+logins=json.load(open('/usr/secrets/broad-dsde-mint-dev-cromwell.json'))
 
 ## input json has uuid, run name and value to parse.
 uuid=sys.argv[1]
@@ -18,7 +18,7 @@ output_name=sys.argv[4]
 value_name=sys.argv[3]
 ##meta_url
 metadata_url="https://cromwell.mint-dev.broadinstitute.org/api/workflows/v1/"+uuid+"/metadata?expandSubWorkflows=false"
-r=requests.get(metadata_url,auth=(logins['username'],logins['password']))
+r=requests.get(metadata_url,auth=(logins['cromwell_username'],logins['cromwell_password']))
 data=r.json()
 ## load output files
 files=data['outputs'][run_name]
@@ -60,7 +60,7 @@ for kk in range(0,len(files)):
             merged=pd.read_csv(bname1,delimiter='\t',skiprows=1,sep='\t',names=['gene_id','trans_id', 'length', 'eff_length','est_counts','tpm','fpkm','pme_count','pme_sd','pme_tpm','pme_fpkm'],usecols=['gene_id','length',value_name])
             merged.columns=['gene_id','length',sample_name]
         else:
-            cnt=pd.read_csv(bname1,delimiter='\t',skiprows=1,sep='\t',names=['gene_id','trans_id', 'length', 'eff_length','est_count','tpm','fpkm','pme_count','pme_sd','pme_tpm','pme_fpkm'],usecols=['gene_id',value_name])
+            cnt=pd.read_csv(bname1,delimiter='\t',skiprows=1,sep='\t',names=['gene_id','trans_id', 'length', 'eff_length','est_counts','tpm','fpkm','pme_count','pme_sd','pme_tpm','pme_fpkm'],usecols=['gene_id',value_name])
             cnt.columns=['gene_id',sample_name]
             merged=pd.merge(left=merged,right=cnt,left_on='gene_id',right_on='gene_id')
 merged=merged.round(3)
