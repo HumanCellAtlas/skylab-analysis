@@ -5,6 +5,8 @@
 # chromosomes
 # it then regenerates fastq data
 
+set -eo pipefail
+
 # grab the picard jar
 curl -o picard.jar https://github.com/broadinstitute/picard/releases/download/2.18.4/picard.jar
 
