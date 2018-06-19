@@ -1,5 +1,4 @@
 Benchmarking Analysis Reports
- - [Data Matrix Reproducibility](https://rawgit.com/HumanCellAtlas/skylab-analysis/jx-ss2-benchmarking/benchmarking/smartseq2/html/data_matrix_reproducibility.html)
- - [Data Matrix Comparative Analysis](https://rawgit.com/HumanCellAtlas/skylab-analysis/jx-ss2-benchmarking/benchmarking/smartseq2/html/Compare_data_matrix.html)
- - [Picard QC metrics Analysis](https://rawgit.com/HumanCellAtlas/skylab-analysis/jx-ss2-benchmarking/benchmarking/smartseq2/html/QC_metrics_analysis.html)
- - [Confounding Factor Analysis](https://rawgit.com/HumanCellAtlas/skylab-analysis/jx-ss2-benchmarking/benchmarking/smartseq2/html/Confounding_factor_analysis.html)
+We have tested the benchmarking framework with 3 datasets, iPSC cellline from [Sloan,SA et al 2017](https://www.sciencedirect.com/science/article/pii/S0896627317306839?via%3Dihub), human GBM cell and cellines from [Patel, AP et al, 2014](http://science.sciencemag.org/content/344/6190/1396.full) and T cell receptor from [Afik S 2017](https://www.ncbi.nlm.nih.gov/pmc/articles/pmid/28934479/).
+
+
