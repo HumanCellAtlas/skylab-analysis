@@ -10,11 +10,11 @@ show_help() {
     echo "Usage: $0 [arguments]"
     echo ""
     echo "Arguments:"
-    echo "  -c\t\tcolumn name file (.npy)"
-    echo "  -r\t\trow name file (.npy)"
-    echo "  -d data file (.npz)"
-    echo "  -o output file (.rds)"
-    echo "  -h print this helpful message"
+    echo "  -c             column name file (.npy)"
+    echo "  -r             row name file (.npy)"
+    echo "  -d             data file (.npz)"
+    echo "  -o             output file (.rds)"
+    echo "  -h             print this helpful message"
     echo ""
 }
 
@@ -57,16 +57,36 @@ shift $((OPTIND-1))
 # echo counts $countsfile
 # echo outputfile $outputfile
 
+## Check the input
+if [ ! -f $colindexfile ]; then
+    echo "Column index file does not exist!";
+    exit;
+fi
+
+if [ ! -f $rowindexfile ]; then
+    echo "Row index file does not exist!";
+    exit;
+fi
+
+if [ ! -f $countsfile ]; then
+    echo "Counts file does not exist!";
+    exit;
+fi
+
+if [ -f $outputfile ]; then
+    echo "The output file already exists!";
+    exit;
+fi
 
 ## Make tmp directory
 tmpdir=`mktemp -d`
 
 ## Convert the npz to text
-./npz2txt.py --col-index $colindexfile \
+npz2txt.py --col-index $colindexfile \
 	     --row-index $rowindexfile \
 	     --counts $countsfile \
 	     --output-dir $tmpdir
 
 ## Convert the text to rds
-./sparseTxt2Rds.R --input-dir $tmpdir --output-file $outputfile
+sparseTxt2Rds.R --input-dir $tmpdir --output-file $outputfile
 
