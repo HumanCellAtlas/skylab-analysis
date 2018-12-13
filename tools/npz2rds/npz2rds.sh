@@ -5,6 +5,7 @@
 ## Description: A wrapper script that converts optimus
 ##   output to RDS R files
 
+set -eo pipefail
 
 show_help() {
     echo "Usage: $0 [arguments]"
