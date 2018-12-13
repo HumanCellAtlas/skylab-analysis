@@ -3,13 +3,21 @@ Converts Optimus output to an output suitable for reading in with R (rds file). 
 
 ## Requirements
 
+You need the following R packages installed: 'optparse'
+
 The utility has been tested with the following:
 
 R >= 3.5.1
 python >= 3.6.2
 numpy >= 1.15.4
 
-It probably works with much earlier versions
+It probably works with much earlier versions.
+
+On a mac you need the following for the test suite to work:
+
+``
+brew install md5sha1sum
+``
 
 # Example Usage
 ``
