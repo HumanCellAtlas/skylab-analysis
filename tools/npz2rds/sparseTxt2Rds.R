@@ -55,6 +55,23 @@ ord1 <- unlist(lapply(1:(length(indptr)-1), function(i) {
 }))
 cat('done\n')
 
+dimError=FALSE;
+if ( shape[1] != length(row_index) ) {
+    cat('Error: the number of rows in the matrix does not equal the number of rows in the index.\n');
+    cat("    Number of array entries is ",shape[1],", number of labels",length(row_index), "\n");
+    dimError=TRUE;
+}
+
+if ( shape[2] != length(col_index) ) {
+    cat('Error: the number of rows in the matrix does not equal the number of rows in the index.\n');
+    cat("    Number of array entries is ",shape[2],", number of labels",length(col_index), "\n");
+    dimError=TRUE;
+}
+
+if (dimError) {
+    stop('Dimension error');
+}
+
 ## Reorder the matrix (j and x values as per the ordering done above)
 ## and generate the dgRMatrix object
 cat('Generating matrix...')
