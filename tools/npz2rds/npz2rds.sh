@@ -15,6 +15,7 @@ show_help() {
     echo "  -r             row name file (.npy)"
     echo "  -d             data file (.npz)"
     echo "  -o             output file (.rds)"
+    echo "  -t             optional temporary directory"
     echo "  -h             print this helpful message"
     echo ""
 }
@@ -28,8 +29,9 @@ colindexfile=""
 rowindexfile=""
 countsfile=""
 outputfile=""
+tmpdir=""
 
-while getopts "hc:r:d:o:" opt; do
+while getopts "hc:r:d:o:t:" opt; do
     case "$opt" in
 	h)
 	    show_help
@@ -46,6 +48,9 @@ while getopts "hc:r:d:o:" opt; do
 	    ;;
 	o)
 	    outputfile=$OPTARG
+	    ;;
+	t)
+	    tmpdir=$OPTARG
 	    ;;
     esac
 done
@@ -80,7 +85,16 @@ if [ -f $outputfile ]; then
 fi
 
 ## Make tmp directory
-tmpdir=`mktemp -d`
+if [ -z "$tmpdir" ]
+then
+    tmpdir=`mktemp -d`
+else
+    if [ ! -d "$tmpdir" ]
+    then
+	echo "Error: Temporary directory '$tmpdir' is not a directory"
+	exit;
+    fi
+fi
 
 ## Convert the npz to text
 npz2txt.py --col-index $colindexfile \
