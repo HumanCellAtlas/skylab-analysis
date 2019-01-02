@@ -85,15 +85,13 @@ if [ -f $outputfile ]; then
 fi
 
 ## Make tmp directory
-if [ -z "$tmpdir" ]
-then
+if [ -z "$tmpdir" ]; then
     tmpdir=`mktemp -d`
-else
-    if [ ! -d "$tmpdir" ]
-    then
-	echo "Error: Temporary directory '$tmpdir' is not a directory"
-	exit;
-    fi
+fi
+
+if [ ! -d "$tmpdir" ]; then
+    echo "Error: Temporary directory '$tmpdir' is not a directory"
+    exit;
 fi
 
 ## Convert the npz to text
