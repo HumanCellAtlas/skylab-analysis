@@ -10,3 +10,6 @@ DropletUtils are available from bioconductor and require R version 3.5
 
 https://bioconductor.org/packages/release/bioc/html/DropletUtils.html
 
+## Testing
+
+To run the tests go into the test directory and run test_emptyDropsWrapper.sh
