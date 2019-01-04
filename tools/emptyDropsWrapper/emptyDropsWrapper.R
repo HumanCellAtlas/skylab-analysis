@@ -122,8 +122,8 @@ inputMatrix <- readRDS(inputRDS)
 
 ## Check the input matrix
 ## Check class
-if(class(inputMatrix) != 'dgCMatrix') {
-    cat(paste0('Error: input matrix is not of class dgCMatrix. It is of class:',class(inputMatrix)),file=stderr())
+if(!class(inputMatrix) %in% c( 'dgCMatrix','dgRMatrix' )) {
+    cat(paste0('Error: input matrix is not of class dgCMatrix or dgRMatrix. It is of class:',class(inputMatrix)),file=stderr())
     quit(save="no",status=1)
 }
 ## Check dimensions
@@ -140,6 +140,12 @@ if(is.null(colnames(inputMatrix))) {
     cat('Warning: colnames of the input matrix are empty',file=stderr())
     quit(save="no",status=1)
 }
+
+## If not a dgRMatrix convert via dgTMatrix (triplet format)
+if (class(inputMatrix) == 'dgRMatrix') {
+   inputMatrix <- as(as(mp,'dgTMatrix'),'dgCMatrix')
+}
+
 
 ## Run emptyDrops with error handling
 catv('Running emptyDrops...')
