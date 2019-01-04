@@ -86,10 +86,10 @@ opt_parser <- OptionParser(option_list=option_list);
 opt <- parse_args(opt_parser);
 
 ## Check the parsed arguments
-if(is.null(opt$input_rds))  errorExit('Input RDS is not specified');
-if(is.null(opt$output_csv)) errorExit('Output CSV is not specified');
-if(!file.exists(opt$input_rds)) errorExit("Input RDS doesn't exist!");
-if(file.exists(opt$output_csv)) errorExit("Output CSV file exists!");
+if(is.null(opt$input_rds))  errorExit("Input RDS is not specified\n");
+if(is.null(opt$output_csv)) errorExit("Output CSV is not specified\n");
+if(!file.exists(opt$input_rds)) errorExit("Input RDS doesn't exist!\n");
+if(file.exists(opt$output_csv)) errorExit("Output CSV file exists!\n");
 
 ## Load the required libraries here
 ## NOTE: We do this after parsing arguments so that --help returns immediatedly
@@ -123,7 +123,7 @@ inputMatrix <- readRDS(inputRDS)
 ## Check the input matrix
 ## Check class
 if(class(inputMatrix) != 'dgCMatrix') {
-    cat('Error: input matrix is not of class dgCMatrix',file=stderr())
+    cat(paste0('Error: input matrix is not of class dgCMatrix. It is of class:',class(inputMatrix)),file=stderr())
     quit(save="no",status=1)
 }
 ## Check dimensions
