@@ -143,7 +143,9 @@ if(is.null(colnames(inputMatrix))) {
 
 ## If not a dgRMatrix convert via dgTMatrix (triplet format)
 if (class(inputMatrix) == 'dgRMatrix') {
+   catv('Input Matrix is in dgRMatrix format. Converting....')
    inputMatrix <- as(inputMatrix, "RsparseMatrix")
+   catv('done\n')
 }
 
 
