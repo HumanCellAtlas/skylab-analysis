@@ -57,6 +57,12 @@ option_list <- list(
                 dest='verbose', 
                 help='print verbose messages',
                 default=FALSE),
+    make_option(c('--transpose'),
+		type='logical',
+		dest='transpose',
+		action='store_true',
+		help='transpose the input matrix before processing',
+		default=FALSE),
     make_option(c('--emptydrops-lower'),
                 default=100, ## as per emptyDrops package
                 help='emptydrops lower parameter',
@@ -143,11 +149,20 @@ if(is.null(colnames(inputMatrix))) {
 
 ## If not a dgRMatrix convert via dgTMatrix (triplet format)
 if (class(inputMatrix) == 'dgRMatrix') {
-   catv('Input Matrix is in dgRMatrix format. Converting....')
+   catv('Input Matrix is in dgRMatrix format. Converting...')
    inputMatrix <- as(inputMatrix, "RsparseMatrix")
    catv('done\n')
 }
 
+## If requested transpose the input matrix
+## TODO: dgRMatrix to dgCMatrix conversion and transposition
+## can be done in a single step by re-interpreting the indexes
+## add is as an --optimized option
+if (opt$transpose) {
+   catv('Transposing input matrix...')
+   inputMatrix <- Matrix::t(inputMatrix);
+   catv('done\n')
+}
 
 ## Run emptyDrops with error handling
 catv('Running emptyDrops...')
