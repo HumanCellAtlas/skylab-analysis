@@ -147,17 +147,17 @@ if(is.null(colnames(inputMatrix))) {
     quit(save="no",status=1)
 }
 
-## If not a dgRMatrix convert via dgTMatrix (triplet format)
-if (class(inputMatrix) == 'dgRMatrix') {
-   catv('Input Matrix is in dgRMatrix format. Converting...')
-   inputMatrix <- as(inputMatrix, "RsparseMatrix")
-   catv('done\n')
-}
+## Convert to CsparseMatrix if required
+## emptyDrops seems to work fine with dgRMatrix so this is not required for now
+## if (class(inputMatrix) == 'dgRMatrix') {
+##   catv('Input Matrix is in dgRMatrix format. Converting...')
+##   inputMatrix <- as(inputMatrix, "CsparseMatrix")
+##   catv('done\n')
+## }
 
 ## If requested transpose the input matrix
-## TODO: dgRMatrix to dgCMatrix conversion and transposition
+## NOTE: dgRMatrix to dgCMatrix conversion and transposition
 ## can be done in a single step by re-interpreting the indexes
-## add is as an --optimized option
 if (opt$transpose) {
    catv('Transposing input matrix...')
    inputMatrix <- Matrix::t(inputMatrix);
