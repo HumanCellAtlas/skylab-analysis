@@ -124,7 +124,7 @@ ed_param_niters <- opt$ed_niters
 ed_param_test.ambient <- opt$ed_test_ambient
 ed_param_ignore <- opt$ed_ignore
 ed_param_alpha <- opt$ed_alpha
-ed_param_BPPARAM=SerialParam() ## TODO: Allow serial or parallele, with ncore specification
+ed_param_BPPARAM <- SerialParam() ## TODO: Allow serial or parallele, with ncore specification
 
 ## Read the input file
 inputMatrix <- readRDS(inputRDS)
