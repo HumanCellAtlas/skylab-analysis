@@ -1,5 +1,44 @@
 #!/usr/bin/env Rscript
 
+library('optparse')
+
+option_list <- list(
+	    make_option(c('-i','--input'),
+			type='character',
+		default=NULL,
+		dest='input',
+		help='directory path of 10x matrix used for input'),
+         make_option(c('-v','--version'),
+		type='character',
+		default='V2',
+		dest='version',
+		help='version of 10X matrix, allowed values V2 and V3')
+	make_option(c('-o','--output'),
+		type='character',
+		default=NULL,
+		dest='output',
+		help='output rds file name')
+)
+	
+## Parse arguements
+opt_parser <- OptionParser(option_list=option_list);
+opt <- parse_args(opt_parser);
+
+#' Prints a message to stderr and exits R with error code 1
+#' @param msg message to standard error
+errorExit <- function(msg) {
+    cat(msg,file=stderr());
+    quit(save='no',status=1);
+}
+
+## Check arguments
+if(is.null(opt$input)) errorExit("Input 10X matrix is not specified\n");
+if(!opt$version %in% c('V2','V3')) 
+     errorExit(paste0("Not allowed value for version parameter: ", opt$version, 
+     			   ". Version must be one of 'V2' or 'V3."))
+if(is.null(opt$output)) errorExit("Output rds file not specified");
+
+
 ## read10xMatrix from the nbHelpers package
 
 #' @title  Read 10x matrix
@@ -40,6 +79,9 @@ read10xMatrix <- function(path, version='V2') {
     invisible(x);
 }
 
+## Main Script
+
+
 ## Read the 10x matrix and save as an RDS file
-d <- read10xMatrix('raw_gene_bc_matrices/GRCh38', version='V2')
-saveRDS(d, 'pbmc4k.rds')
+d <- read10xMatrix(opt$input, version=opt$version)
+saveRDS(d, opt$output)
