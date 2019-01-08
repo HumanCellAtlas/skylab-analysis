@@ -1,8 +1,5 @@
 #!/bin/bash
 
-## File: test_emptyDropsWrapper.sh
-## Author: Nikolas Barkas
-## Date: January 3, 2019
 ## Description: Unit test for emptyDropsWrapper script
 
 ## Download some sample data from 10X
