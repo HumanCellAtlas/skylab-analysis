@@ -15,4 +15,9 @@ https://bioconductor.org/packages/release/bioc/html/DropletUtils.html
 
 ## Testing
 
-To run the tests go into the test directory and run test_emptyDropsWrapper.sh
+To run the tests run the following:
+
+```
+cd /tools/emptyDropsWrapper/test/ 
+./test_emptyDropsWrapper.sh
+```
