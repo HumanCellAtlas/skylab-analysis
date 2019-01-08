@@ -34,6 +34,9 @@ NA2FALSE <- function(x) {
     x[is.na(x)] <- FALSE;x
 }
 
+## Link to emptyDrops pre-print: 
+## https://www.biorxiv.org/content/early/2018/04/04/234872
+
 ## Parse the input arguments
 option_list <- list(
     make_option(c('-i','--input-rds'),
