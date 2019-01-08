@@ -27,7 +27,7 @@ catv <- function(...) {
     }
 }
 
-#' Converts NAs in a vector to FALSE
+#' Converts NA values in a vector to FALSE
 #' @param x vector to convert NAs in
 #' @return the x vector with NAs turned to FALSE
 NA2FALSE <- function(x) {
