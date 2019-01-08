@@ -31,7 +31,7 @@ printf "Running emptyDrops..."
 printf "done\n"
 
 ## Check the output md5 checksum
-## Note that empty drops is based on MC simulation and therefore
+## Note that empty drops is based on Monte Carlo simulation and therefore
 ## the output is not guaranteed to be deterministic, in our
 ## test it was and therefore the following checksum always
 ## validates
