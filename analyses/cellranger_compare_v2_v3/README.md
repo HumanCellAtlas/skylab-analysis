@@ -1,77 +1,167 @@
-# README for cellranger_compare_v2_v3
+# Cellranger V2 vs V3 analysis walkthrough
 
-The following outlines the directory structure and describes the use of the script files.
+This document provides instructions for reproducing the comparison between version 2 and 3 of cellranger.
 
-docker/
-	This directory contains the scripts required to build the docker image on which
-	the R analysis is run on. The docker image is based on ubuntu 16.04 and R version 3.5.1.
-	The docker file will install dependencies for Seurat and pagoda2 and install specific
-	commits (current as of the time of generation of the image) of these two packages. The R
-	requirements for pagoda and seurat are in the pagoda2.deps.r and seurat.deps.r files respectively.
+Software requirements to run the following are a working installation of docker and git. You will also need a machine capable of running cellranger and
+at least 400GB of disk space.
 
-	To build this image run:
+The following instructions have been generated for linux systems but should also work on windows systems with minor modifications.
 
-	docker build -t quay.io/humancellatlas/secondary-analysis-cellranger-comparison-v2-v3
+```
+############################
+## Setup the docker image
+############################
 
-	The build image can also be found on quay with the above tag
+## First of all define a location where the analysis will be stored in the host
+## machine by setting the following environment variable
+mkdir v2v3analysisData
+export data=${PWD}/v2v3analysisData
 
-README.md
+## Obtain a copy of the git repository and export the required branch
+## TODO: Update the branch once its merged
+git clone https://github.com/HumanCellAtlas/skylab-analysis.git
+cd skylab-analysis
+export repos_root=${PWD}
+git checkout nb-add-v2-v3-report-code
+cd analyses/cellranger_compare_v2_v3/docker/
 
-        This file explaining the structure of the directories and steps required to reproduce the analysis
+## Build the docker image. This step take a bit less than an hour to complete
+## Alternative the built image is availabel on quay.io and can be pulled
+## using the tag 'quay.io/humancellatlas/secondary-analysis-cellranger-comparison-v2-v3'
+docker build -t quay.io/humancellatlas/secondary-analysis-cellranger-comparison-v2-v3 .
 
-runs
+## Run the docker container mounting the checked out repository and the
+## data folder specified above
+docker run \
+	--mount type=bind,source=${data},destination=/data/ \
+	--mount type=bind,source=${repos_root},destination=/repos/ \
+	-it quay.io/humancellatlas/secondary-analysis-cellranger-comparison-v2-v3 \
+	/bin/bash
 
-	This folder contains all the scripts required to reproduce the analysis. This includes both the cellranger
-	and the R (Custom, Seurat and Pagoda2 parts). The folder is organised by cellranger run name (dataset and
-	reference used). In order to run the cellranger counting the v2 and v3 versions of cell ranger need to be
-	downloaded independly. The downloads are available from the 10X website (https://www.10xgenomics.com).
-	The versions of cellranger used for this analysis were: v2: v2.2.0 nd v3: v3.0.0.
+## Make a copy of the skeleton analysis in data 
+cp -r /repos/analyses/cellranger_compare_v2_v3/run_skeleton /data/
+```
 
-	IMPORTANT NOTE: The run environment for these scripts is provided by the docker image above:
-	quay.io/humancellatlas/secondary-analysis-cellranger-comparison-v2-v3
+At this point you need to download cellranger version 2.2.0 and 3.0.0 manually from teh 10X website.
+Navigate to https://support.10xgenomics.com/single-cell-gene-expression/software/downloads/3.0/ and obtain
+links to the tar files required.
 
-    cmpCellRanger2vs3_GRCh38.rel-93
+Then continue with the instructions below
 
-	This folder contains the scripts for running cellranger (both versions 2 and 3) reference generation
-	counting and them examining the resulting data count matrices in R.
+```
+cd /data/
+mkdir software
 
-	The 10X 4k PBMC samples are used for this analysis. These can be downloaded from the 10X website.
+## Download the files the links to which you obtained in this directory
 
-	In 01-mkref/, reffiles/getfile.sh
-	downloads a specific version of the reference fasta and gtf annotation. The scripts v2/buildrefV2.sh and
-	v3/buildrefV3.sh generate cellranger annotations using the respective cellranger version.
+## Extract the files
+tar xzf cellranger-2.2.0.tar.gz
+tar xzf cellranger-3.0.1.tar.gz
 
-	In 02-count there are 3 run directories: execV2_annotV2, execV3_annotV2 and execV3_annotV3. These
-	contain the counting runs for cellranger for different versions of cellranger and annotation as denoted
-	in the name. For example execV2_annotV2 uses v2 cellranger generated annotation and the v2 of cellranger
-	to do the counting.
+## Set the global cellranger executable paths
+export cellranger_v2_exec=/data/software/cellranger-2.2.0/cellranger
+export cellranger_v3_exec=/data/software/cellranger-3.0.1/cellranger
 
-	In 03-examine we examine the resulting matrices from the counting and generate the figures for the
-	report. The main analysis is in checkFilteredMatrices.R. checkRawMatrices.R contains  a smaller
-	version of the analysis performed on the raw matrices. functions.R contains auxilary functions
-	used in the analysis. seurat_analsis.R contains the script that performs analysis of the dataset using
-	Seurat.
 
-    cmpCellRanger2vs3_HCA_BM1_Gencode
+#########################
+## Build the reference
+#########################
 
-	This directory has a structure very similar to that of the directory cmpCellRanger2vs3_GRCh38.rel-93/
-	the main difference is that it does not contain the reference generation step. Instead for this run
-	the gencode v27 annotation is used. This is the annotation version that is used by the optimus pipeline
-	and is used here for direct comparison. The reference used for this analysis can be downloaded from:
+## Download the fasta and gtf files required for building the references
+cd  /data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/01-mkref/reffiles
+./getfiles
 
-	gs:///hca-dcp-mint-test-data/reference/GRCh38_Gencode/GRCh38_GencodeV27_Primary_CellRanger.tar.gz
+## Set the enviroment variable specifying the location of the reference files
+export refdir_GRCh38_rel93=/data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/01-mkref/reffiles
 
-	Also, for this analysis the HCA_BM1 sample is used for this analysis. Specifically the following files
-	were used:
+## Build V2 reference
+cd /data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/01-mkref/v2
+./buildrefV2.sh
 
-	MantonBM1_HiSeq_1_S1_L007_I1_001.fastq.gz  MantonBM1_HiSeq_1_S1_L008_I1_001.fastq.gz
-	MantonBM1_HiSeq_1_S1_L007_R1_001.fastq.gz  MantonBM1_HiSeq_1_S1_L008_R1_001.fastq.gz
-	MantonBM1_HiSeq_1_S1_L007_R2_001.fastq.gz  MantonBM1_HiSeq_1_S1_L008_R2_001.fastq.gz
+## Build V3 reference
+cd /data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/01-mkref/v3
+./buildrefV3.sh
 
-	These files can be dowloaded from the HCA preview website as part of the 'Census of Immune Cells'
-	dataset. ( https://preview.data.humancellatlas.org/ ). 
+## Export paths to references
+export referenceV2=/data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/01-mkref/v2/GRCh38
+export referenceV3=/data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/01-mkref/v3/GRCh38
 
-    cmpCellRanger2vs3_HCA_BM1_GRCh38.rel-93
+########################
+## Download data
+########################
 
-	This directory contains an analysis similar to that found in cmpCellRanger2vs3_HCA_BM1_Gencode/
-	but with the same annotation used in cmpCellRanger2vs3_GRCh38.rel-93
+## 10X 4k PBMC
+cd /data/run_skeleton/fastqs/pbmc4k
+./getData.sh
+tar xf pbmc4k_fastqs.tar
+export data_pbmc4k=/data/run_skeleton/fastqs/pbmc4k/fastqs
+
+## HCA BM1
+```
+This step need to be performed manually.
+Navigate to https://preview.data.humancellatlas.org/ adn obtain the
+samples names MantonBM1_1_* (this should include two lanes of data
+(lane 7 and lane8) into the current directory.
+```
+## Export the location of the hcabm1 data
+export data_hcabm1=/data/run_skeleton/fastqs/hcaBM1
+
+################################################
+## Analysis PBMC4k with GRCh38.rel-93 reference
+################################################
+
+## Run counting with cellranger
+cd /data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/02-count/execV2_annotV2
+./count_execV2_annotV2.sh
+cd /data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/02-count/execV3_annotV2
+./count_execV3_annotV2.sh
+cd /data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/02-count/execV3_annotV3
+./count_execV3_annotV3.sh
+
+## Do analysis in R
+cd /data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/03-examine
+Rscript checkFilteredMatrices.R
+Rscript checkRawMatrices.R
+Rscript seurat_analysis.R
+
+######################################################
+## Analysis of HCA_BM1 with GRCh38.rel-93
+######################################################
+
+## Run counting with cellranger
+cd /data/run_skeleton/cmpCellRanger2vs3_HCA_BM1_GRCh38.rel-93/execV2_annotV2
+./count_execV2_annotV2.sh
+
+cd /data/run_skeleton/cmpCellRanger2vs3_HCA_BM1_GRCh38.rel-93/execV3_annotV3
+./count_execV3_annotV3.sh
+
+## Run analysis
+cd /data/run_skeleton/cmpCellRanger2vs3_HCA_BM1_GRCh38.rel-93/compare
+./analysis_seurat.R
+
+###########################################################
+## Analysis HCA_BM1 with Gencode used by the SS2 pipeline
+###########################################################
+
+# Get the GencodeV27 reference, this is a pre-build cellranger reference
+cd /data/run_skeleton/cmpCellRanger2vs3_HCA_BM1_Gencode/reference
+gsutil cp gs://hca-dcp-mint-test-data/reference/GRCh38_Gencode/GRCh38_GencodeV27_Primary_CellRanger.tar .
+tar xf GRCh38_GencodeV27_Primary_CellRanger.tar
+
+## Export the location of the reference
+export referenceGencode=/data/run_skeleton/cmpCellRanger2vs3_HCA_BM1_Gencode/reference/GRCh38
+
+## Run V2
+cd /data/run_skeleton/cmpCellRanger2vs3_HCA_BM1_Gencode/cellranger/cr_v2
+./count.sh
+
+## Run V3
+cd /data/run_skeleton/cmpCellRanger2vs3_HCA_BM1_Gencode/cellranger/cr_v3
+./count.sh
+
+## Run the comparative analysis
+cd /data/run_skeleton/cmpCellRanger2vs3_HCA_BM1_Gencode/analysis
+Rscript hca_bm1_cr_v2_vs_v3_seraut.R
+
+
+```
