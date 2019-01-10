@@ -22,7 +22,10 @@ export data=${PWD}/v2v3analysisData
 git clone https://github.com/HumanCellAtlas/skylab-analysis.git
 cd skylab-analysis
 export repos_root=${PWD}
-git checkout nb-add-v2-v3-report-code
+
+## Not required once merged into master
+#git checkout nb-add-v2-v3-report-code
+
 cd analyses/cellranger_compare_v2_v3/docker/
 
 ## Build the docker image. This step take a bit less than an hour to complete
