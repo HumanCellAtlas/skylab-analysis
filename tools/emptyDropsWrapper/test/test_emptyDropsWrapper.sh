@@ -9,6 +9,7 @@ testDataInputMatrixPath=raw_gene_bc_matrices/GRCh38
 rdsFileName=pbmc4k.rds
 emptyDropsOutput=pbmc4k_emptyDrops.csv
 md5checksum="c2b0c8f24b9f8383f7de710774c9bbab"
+extraCleanup=raw_gene_bc_matrices
 
 ## Download some sample data from 10X
 printf "Downloading pbmc4k data..."
@@ -46,9 +47,5 @@ fi
 printf "done\n"
 
 ## Cleanup
-
-rm -r raw_gene_bc_matrices # Not sure how to do this safely
-rm -r ${emptyDropsOutput} ${testDataFileName} $ ${rdsFileName}
-
-
-
+rm ${emptyDropsOutput} ${testDataFileName} $ ${rdsFileName}
+rm -r ${extraCleanup}
