@@ -10,7 +10,7 @@ library('fastSave')
 ggsource('functions.R')
 
 ## The V2 and V3 filtered input files
-v2filt.file <- '/data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/02-count/execV2_annotV2/pbmc_4k/outs/filtered_feature_bc_matrix'
+v2filt.file <- '/data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/02-count/execV2_annotV2/pbmc_4k/outs/filtered_gene_bc_matrices/GRCh38'
 v3filt.file <- '/data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/02-count/execV3_annotV3/pbmc_4k/outs/filtered_feature_bc_matrix'
 
 
