@@ -11,8 +11,9 @@ library(Matrix)
 source('functions.R')
 
 ## Read in the V2 and V3 matrices
-raw.V2V2 <- "/home/nbarkas/storage2/nbarkas/cmpCellRanger2vs3_GRCh38.rel-93/02-count/execV2_annotV2/pbmc_4k/outs/raw_gene_bc_matrices/GRCh38"
-raw.V3V3 <- "/home/nbarkas/storage2/nbarkas/cmpCellRanger2vs3_GRCh38.rel-93/02-count/execV3_annotV3/pbmc_4k/outs/raw_feature_bc_matrix"
+raw.V2V2 <- "/data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/02-count/execV2_annotV2/pbmc_4k/outs/raw_gene_bc_matrices"
+raw.V3V3 <- "/data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/02-count/execV3_annotV3/pbmc_4k/outs/raw_feature_bc_matrix"
+
 v2.raw <- read10xMatrix(raw.V2V2,version='V2')
 v3.raw <- read10xMatrix(raw.V3V3, version='V3')
 

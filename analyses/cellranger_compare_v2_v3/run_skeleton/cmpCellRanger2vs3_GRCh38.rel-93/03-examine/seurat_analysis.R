@@ -10,8 +10,9 @@ library('fastSave')
 ggsource('functions.R')
 
 ## The V2 and V3 filtered input files
-v2filt.file <- '/home/nbarkas/storage2/nbarkas/cmpCellRanger2vs3_GRCh38.rel-93/03-examine/pbmc_4k_mats/v2v2/filter'
-v3filt.file <- '/home/nbarkas/storage2/nbarkas/cmpCellRanger2vs3_GRCh38.rel-93/03-examine/pbmc_4k_mats/v3v3/filtered'
+v2filt.file <- '/data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/02-count/execV2_annotV2/pbmc_4k/outs/filtered_feature_bc_matrix'
+v3filt.file <- '/data/run_skeleton/cmpCellRanger2vs3_GRCh38.rel-93/02-count/execV3_annotV3/pbmc_4k/outs/filtered_feature_bc_matrix'
+
 
 #install.packages('Seurat') # remember to install hdf5 when dockerizing
 

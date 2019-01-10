@@ -46,3 +46,8 @@ WORKDIR /root/pagoda2
 RUN git checkout d1eadc48d5f05b1ca5f0cd6434c5d9726d7d9a8e
 RUN R CMD INSTALL .
 
+## Install gsulil
+RUN apt-get install -y lsb-release curl
+RUN CLOUD_SDK_REPO="cloud-sdk-$(lsb_release -c -s)" && echo "deb http://packages.cloud.google.com/apt $CLOUD_SDK_REPO main" | tee -a /etc/apt/sources.list.d/google-cloud-sdk.list
+RUN curl https://packages.cloud.google.com/apt/doc/apt-key.gpg |  apt-key add -
+RUN apt-get update && apt-get install -y google-cloud-sdk --allow-unauthenticated 

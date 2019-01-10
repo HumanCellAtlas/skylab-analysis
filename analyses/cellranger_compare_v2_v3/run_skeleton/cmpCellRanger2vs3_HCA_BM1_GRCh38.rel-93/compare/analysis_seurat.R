@@ -6,8 +6,9 @@ library(Seurat)
 library(nbHelpers)
 
 ## Input file paths
-v2.path <- '/home/nbarkas/storage3/nbarkas/work/cmpCellRanger2vs3_HCA_BM1_GRCh38.rel-93/execV2_annotV2/hca_bm_s1/outs/filtered_gene_bc_matrices/GRCh38'
-v3.path <- '/home/nbarkas/storage3/nbarkas/work/cmpCellRanger2vs3_HCA_BM1_GRCh38.rel-93/execV3_annotV3/hca_bm_s1/outs/filtered_feature_bc_matrix'
+v2.path <- '/data/run_skeleton/cmpCellRanger2vs3_HCA_BM1_GRCh38.rel-93/execV2_annotV2/hca_bm_s1/outs/filtered_gene_bc_matrices/GRCh38'
+v3.path <- '/data/run_skeleton/cmpCellRanger2vs3_HCA_BM1_GRCh38.rel-93/execV3_annotV3/hca_bm_s1/outs/filtered_feature_bc_matrix'
+
 
 ## Read in the matrices
 v2.mat <- read10xMatrix(v2.path,'V2')
