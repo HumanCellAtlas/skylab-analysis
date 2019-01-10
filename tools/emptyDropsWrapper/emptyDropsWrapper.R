@@ -1,8 +1,5 @@
 #!/usr/bin/env Rscript
 
-## Filename: emptyDropsWrapper.R
-## Author: Nikolas Barkas
-## Date: Jan 2019
 ## Description: Wrapper for running emptyDrops on a sparse matrix, provides
 ##    command line arguments for emptyDrops and I/O handling and
 ##    error trapping.
@@ -152,6 +149,7 @@ if(is.null(colnames(inputMatrix))) {
 
 ## Convert to CsparseMatrix if required
 ## emptyDrops seems to work fine with dgRMatrix so this is not required for now
+## however it is here as it can help optimization in the future
 ## if (class(inputMatrix) == 'dgRMatrix') {
 ##   catv('Input Matrix is in dgRMatrix format. Converting...')
 ##   inputMatrix <- as(inputMatrix, "CsparseMatrix")
