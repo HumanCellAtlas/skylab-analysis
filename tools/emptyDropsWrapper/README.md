@@ -6,8 +6,8 @@ Reads in an rds file containing the count matrix in dgCMatrix format in gene x d
 
 This script requires the following R packages to be installed: 
 
-* 'optparse'
-* 'DropletUtils'
+* optparse
+* DropletUtils
 
 DropletUtils are available from bioconductor and require R version 3.5
 
