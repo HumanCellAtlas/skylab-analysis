@@ -80,20 +80,12 @@ Script that checks the effect of applying or not umi correction to the Optimus o
 the dataset that is performed using the uncorrected umi 
 tags.
 
-###check-cellranger-input-annotation
-Script to check the number of input genes in the filtered Cell Ranger annotation. It loads the annotation gtf from 
+### Check Cell Ranger input annotation
+The Script to check the number of input genes in the filtered Cell Ranger annotation can be foung under
+```check-cellranger-input-annotation```. It loads the annotation gtf from 
 Cell Ranger (after the filtering) and counts unique genes. This is used to check that the number of genes that the 
-Cell Ranger output has is limited due to the GTF input.
+Cell Ranger output has is limited due to the GTF input (and that the numbers match).
 
-
-
-
-
-
-###optimus-reproducibility
-Scripts that compare the reproducibility of optimus accross identical runs. They are based on three identical runs of
-the t_4k dataset from cellranger.
-
-###umi-check
-
-
+### Checking reproducibility
+The scripts that check the reproducibility of the output can be found under ``optimus-reproducibility``.
+they are based on three identical runs of the t_4k dataset from cellranger.
