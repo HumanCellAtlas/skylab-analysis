@@ -2,26 +2,24 @@ import pysam
 import sys
 import argparse
 
+
 # python3  script.py BAM  whitelist
-   
 
 
 def read_whitelist(whitelist_file):
-   """This function reads the white list file and returns the list"""
+    """This function reads the white list file and returns the list"""
 
-   # create an empty dictionary to store the white lists
-   whitelistdict={}
-   with open(whitelist_file, 'r') as fp:
-      for line in fp:
-        whitelistdict[line.strip()]=True
+    # create an empty dictionary to store the white lists
+    whitelistdict = {}
+    with open(whitelist_file, 'r') as fp:
+        for line in fp:
+            whitelistdict[line.strip()] = True
 
-   # return the list of whitelist
-   return whitelistdict.keys()
-   
+    # return the list of whitelist
+    return whitelistdict.keys()
 
 
 def barcode_counting():
-
     description = """This script computes statistics for cell barcode correction
                    from a BAM file from Optimus after the Attach10Barcodes task. 
                    The script also takes a cutoff parameter to count barcodes with 
@@ -46,54 +44,54 @@ def barcode_counting():
 
     args = parser.parse_args()
 
-    whitelist=read_whitelist(args.whitelist)
+    whitelist = read_whitelist(args.whitelist)
 
     barcodes = {}
     corrected_barcodes = {}
-    
+
     samfile = pysam.AlignmentFile(args.input_bam, "rb")
-    
+
     tot = 0  # total reads
-    i = 0    #  reads with 0 error
-    j = 0    # reads with 1 error
-    k = 0    # reads with 2 or more
+    i = 0  # reads with 0 error
+    j = 0  # reads with 1 error
+    k = 0  # reads with 2 or more
     l = 0
-    
+
     # retrieve reads one by one
     for read in samfile:
-       tot += 1
-       # if there is a cell barcode
-       if read.has_tag('CB'):
-         cbtag = read.get_tag('CB')
-         
-         if not cbtag in barcodes:
-            barcodes[cbtag] = 0
-    
-         barcodes[cbtag] +=  1
+        tot += 1
+        # if there is a cell barcode
+        if read.has_tag('CB'):
+            cbtag = read.get_tag('CB')
 
+            if not cbtag in barcodes:
+                barcodes[cbtag] = 0
 
-         crtag = read.get_tag('CR')
-         # if raw cell barcode is already in the white list
-         if crtag in whitelist:
-           i = i + 1
-         else:
-           if not crtag in corrected_barcodes:
-              corrected_barcodes[crtag] = [0, cbtag]
-           corrected_barcodes[crtag][0] += 1
-           j = j + 1 
-       else:
-         #print('d', mindistance(read.get_tag('CR'))) 
-         #ed = mindistance(read.get_tag('CR'))
-         #errors[ed] +=1 
-         k = k + 1
-    
-       if tot % 3000000==0:
-         print(tot, i, j, k)
-         print_statistics(barcodes, corrected_barcodes)
+            barcodes[cbtag] += 1
+
+            crtag = read.get_tag('CR')
+            # if raw cell barcode is already in the white list
+            if crtag in whitelist:
+                i = i + 1
+            else:
+                if not crtag in corrected_barcodes:
+                    corrected_barcodes[crtag] = [0, cbtag]
+                corrected_barcodes[crtag][0] += 1
+                j = j + 1
+        else:
+            # print('d', mindistance(read.get_tag('CR')))
+            # ed = mindistance(read.get_tag('CR'))
+            # errors[ed] +=1
+            k = k + 1
+
+        if tot % 3000000 == 0:
+            print(tot, i, j, k)
+            print_statistics(barcodes, corrected_barcodes)
 
     print("{}\t{}\t{}\t{}".format(tot, i, j, k))
 
     print_statistics(barcodes, corrected_barcodes, args.cutoff)
+
 
 def print_statistics(barcodes, corrected_barcodes, cutoff):
     """ This script computes and reports the following: 
@@ -104,19 +102,21 @@ def print_statistics(barcodes, corrected_barcodes, cutoff):
     """
     barcode_counts = sorted(barcodes.values())
     num_barcodes = len(barcode_counts)
-    
 
-    corr_to_bar_with_min_count=0
-    reads_in_min_count_corrected_barcodes=0
+    corr_to_bar_with_min_count = 0
+    reads_in_min_count_corrected_barcodes = 0
     for barcode in corrected_barcodes:
-       # if corrected barcode has been seen at least 'cutoff times'
-       if barcodes[corrected_barcodes[barcode][1]] >= cutoff:
-         corr_to_bar_with_min_count +=1
-         reads_in_min_count_corrected_barcodes +=corrected_barcodes[barcode][0]
-    
+        # if corrected barcode has been seen at least 'cutoff times'
+        if barcodes[corrected_barcodes[barcode][1]] >= cutoff:
+            corr_to_bar_with_min_count += 1
+            reads_in_min_count_corrected_barcodes += corrected_barcodes[barcode][0]
+
     print("Cutoff: {}".format(cutoff))
-    print("Total barcodes: {}    Corrected barcodes : {}  Corrected barcodes: {} with min #reads {}  Reads in corrected barcodes: {}".format(num_barcodes, len(corrected_barcodes),  corr_to_bar_with_min_count,  cutoff, reads_in_min_count_corrected_barcodes))
+    print(
+        "Total barcodes: {}    Corrected barcodes : {}  Corrected barcodes: {} with min #reads {}  Reads in corrected barcodes: {}".format(
+            num_barcodes, len(corrected_barcodes), corr_to_bar_with_min_count, cutoff,
+            reads_in_min_count_corrected_barcodes))
 
 
-if __name__=="__main__":
-   barcode_counting()
+if __name__ == "__main__":
+    barcode_counting()

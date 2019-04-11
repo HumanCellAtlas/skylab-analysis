@@ -21,11 +21,11 @@ def main():
                   with or without random permutations (columnwise) and reordering (across barcodes) to check
                   for robustness of the correlations (which is done by downsteam codes written in R)"""
 
-    parser = argparse.ArgumentParser( description=description)
+    parser = argparse.ArgumentParser(description=description)
 
     parser.add_argument(
-        '--optimus-output', 
-        dest='optimus_dir', 
+        '--optimus-output',
+        dest='optimus_dir',
         required=True,
         help='Optimus output dir containing files sparse_counts.npz, sparse_counts_(col/row)_index.npy')
 
@@ -50,8 +50,8 @@ def main():
     parser.add_argument(
         '--sub-sample-size',
         dest='sub_sample_size',
-        default=5000,
         type=int,
+        default=5000,
         help='number random barcodes picked for computing the correlations')
 
     parser.add_argument(
@@ -77,17 +77,15 @@ def main():
     for i, barcode in enumerate(opt_barcodes):
         opt_barcodes_dict[barcode] = i
 
-
     # create the csr matrix  for Optimus
-    opt_csr_matrix= sparse.csr_matrix((opt_counts['data'], opt_counts['indices'], \
-                                       opt_counts['indptr']), shape=opt_counts['shape'])
+    opt_csr_matrix = sparse.csr_matrix((opt_counts['data'], opt_counts['indices'],
+                                        opt_counts['indptr']), shape=opt_counts['shape'])
 
-    #print('opt matrix shape', opt_csr_matrix.shape)
+    # print('opt matrix shape', opt_csr_matrix.shape)
 
     # read the cell ranger files in tsv and mtx format
     cell_genes, cell_barcodes, cell_mat = load_cellranger_mtx(
         args.cellranger_dir)
-
 
     # reads the barcode names for Cell Ranger
     cell_genes_dict = {}
@@ -130,8 +128,8 @@ def main():
     opt_csr_submatrix = opt_csr_matrix[row_list, :][:, col_list]
 
     print('opt csr sub-matrix', opt_csr_submatrix.shape)
-    #cell_csr_submatrix_arr = cell_csr_submatrix.toarray()
-    #opt_csr_submatrix_arr = opt_csr_submatrix.toarray()
+    # cell_csr_submatrix_arr = cell_csr_submatrix.toarray()
+    # opt_csr_submatrix_arr = opt_csr_submatrix.toarray()
 
     tot = len(row_list)
 
@@ -153,12 +151,11 @@ def main():
         else:
             cell_norm_inv.append(1.0)
 
-
     # this is and random permutation across the cell barcodes or rows for sampling
     row_indices = np.random.permutation(range(len(row_list)))
 
     k = 0
-    
+
     print("correlation:{}\t{}\t{}".format("correl", "cell_ranger", "optimus"))
     # process one row at a time 
     for i in row_indices:
@@ -209,16 +206,17 @@ def main():
             pass
 
 
-def print_values():
+def print_values(com_barcodes_set, com_genes_set, cell_barcodes_dict, cell_genes_dict, cell_csr_matrix,
+                 opt_barcodes_dict, opt_genes_dict, opt_csr_matrix):
     fout = sys.stdout
     b = 0
     for i, barcode in enumerate(com_barcodes_set):
-        #print(i)
+        # print(i)
         rowcount = cell_csr_matrix[
-            cell_barcodes_dict[barcode], :].count_nonzero()
+                   cell_barcodes_dict[barcode], :].count_nonzero()
         if rowcount <= 52:
             continue
-        #print('rowcount 10', rowcount)
+        # print('rowcount 10', rowcount)
 
         # skip zero read barcodes
         fout.write("{}\t{}\t".format(i, barcode))
