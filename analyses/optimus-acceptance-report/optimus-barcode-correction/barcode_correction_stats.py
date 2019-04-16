@@ -2,10 +2,6 @@ import pysam
 import sys
 import argparse
 
-
-# python3  script.py BAM  whitelist
-
-
 def read_whitelist(whitelist_file):
     """This function reads the white list file and returns the list"""
 
@@ -20,8 +16,8 @@ def read_whitelist(whitelist_file):
 
 
 def barcode_counting():
-    description = """This script computes statistics for cell barcode correction
-                   from a BAM file from Optimus after the Attach10Barcodes task. 
+    description = """This script computes statistics for cell barcode correction, against a whitelist, 
+                   for the reads in a BAM file from Optimus after the Attach10Barcodes task. 
                    The script also takes a cutoff parameter to count barcodes with 
                    this minimum number of reads in the sample"""
 
